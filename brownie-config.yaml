@@ -1,0 +1,9 @@
+compiler:
+  solc:
+    version: 0.8.9
+    optimizer:
+      enabled: true
+      runs: 200
+
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2
