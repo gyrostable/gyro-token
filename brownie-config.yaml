@@ -4,6 +4,10 @@ compiler:
     optimizer:
       enabled: true
       runs: 200
+    remappings:
+      - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.3.2"
+      - "@openzeppelin/upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2"
 
 dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.3.2
   - OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2

@@ -1,4 +1,4 @@
-from brownie import GyroToken  # type: ignore
+from brownie import GyroToken, GyroTokenProxy, ProxyAdmin  # type: ignore
 
 from scripts.utils import get_deployer, with_gas_usage
 
@@ -9,4 +9,9 @@ INITIAL_SUPPLY = 1_000_000_000 * 10 ** 18
 def main():
     deployer = get_deployer()
     gyro_token = deployer.deploy(GyroToken)
-    gyro_token.initialize(INITIAL_SUPPLY, {"from": deployer})
+
+    proxy_admin = deployer.deploy(ProxyAdmin)
+
+    deployer.deploy(
+        GyroTokenProxy, gyro_token.address, proxy_admin.address, INITIAL_SUPPLY  # type: ignore
+    )

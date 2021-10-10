@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.9;
 
-import "OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2/contracts/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
 contract GyroToken is ERC20Upgradeable {
     uint64 constant INITIAL_INFLATION_RATE = 2e16;
