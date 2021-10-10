@@ -50,4 +50,11 @@ contract GyroToken is ERC20Upgradeable {
         nextInflation = uint64(block.timestamp) + inflationInterval;
         _mint(account, amountToMint);
     }
+
+    /// @notice changes the governor to `newGovernor`
+    /// This can only be called by the current governor
+    function changeGovernor(address newGovernor) external governanceOnly {
+        require(newGovernor != address(0), "governor cannot be the 0 address");
+        governor = newGovernor;
+    }
 }
