@@ -9,6 +9,6 @@
   ],
   "[solidity]": {
     "editor.tabSize": 4,
-    "editor.defaultFormatter": "JuanBlanco.solidity"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

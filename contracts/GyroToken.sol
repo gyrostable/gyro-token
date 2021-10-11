@@ -4,19 +4,22 @@ pragma solidity 0.8.9;
 import "@openzeppelin/upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
 contract GyroToken is ERC20Upgradeable {
+    /// @notice the initial yearly inflation rate, 2%
     uint64 constant INITIAL_INFLATION_RATE = 2e16;
-    uint64 constant INITIAL_INFLATION_INTERVAL = 365 days;
+
+    uint64 constant SECONDS_IN_YEAR = 365 days;
+
+    /// @notice time of the first inflation
+    /// inflation will start after the vesting schedule of 4 years
+    uint64 constant INITIAL_INFLATION_DELAY = 4 * SECONDS_IN_YEAR;
 
     /// @notice address of the governance contract
     address public governor;
 
-    /// @notice time of the next inflation
-    uint64 public nextInflation;
+    /// @notice time of the latest inflation
+    uint64 public latestInflationTimestamp;
 
-    /// @notice interval between inflations
-    uint64 public inflationInterval;
-
-    /// @notice the percentage of new tokens minted
+    /// @notice the percentage of new tokens minted per year
     uint64 public inflationRate;
 
     modifier governanceOnly() {
@@ -28,9 +31,8 @@ contract GyroToken is ERC20Upgradeable {
         __ERC20_init("Gyroscope", "GYRO");
 
         governor = msg.sender;
-        inflationInterval = INITIAL_INFLATION_INTERVAL;
         inflationRate = INITIAL_INFLATION_RATE;
-        nextInflation = uint64(block.timestamp) + INITIAL_INFLATION_INTERVAL;
+        latestInflationTimestamp = uint64(block.timestamp) + INITIAL_INFLATION_DELAY;
 
         _mint(msg.sender, initialSupply);
     }
@@ -40,14 +42,17 @@ contract GyroToken is ERC20Upgradeable {
     /// Only governance is allowed to call this function
     function mint(address account) external governanceOnly {
         require(
-            block.timestamp >= nextInflation,
-            "cannot mint before inflation is scheduled"
+            block.timestamp >= latestInflationTimestamp,
+            "cannot mint before the first inflation is scheduled"
         );
-        require(account != address(0), "cannot burn to 0 address");
+        require(account != address(0), "cannot mint to 0 address");
 
-        uint256 amountToMint = (totalSupply() * inflationRate) / 10**decimals();
+        uint256 timeEllapsedSinceLastInflation = block.timestamp - latestInflationTimestamp;
+        uint256 amountToMint = (totalSupply() * inflationRate * timeEllapsedSinceLastInflation) /
+            SECONDS_IN_YEAR /
+            10**18;
 
-        nextInflation = uint64(block.timestamp) + inflationInterval;
+        latestInflationTimestamp = uint64(block.timestamp);
         _mint(account, amountToMint);
     }
 
