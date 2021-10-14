@@ -13,6 +13,16 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Use Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install ganache-cli
+        run: npm install -g ganache-cli
       - name: Install brownie
         run: pip3 install wheel eth-brownie
       - name: Compile contracts
