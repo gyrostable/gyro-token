@@ -3,11 +3,17 @@ pragma solidity 0.8.9;
 
 import "@openzeppelin/upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 
+import "../libraries/LogExpMath.sol";
+
 contract GyroToken is ERC20Upgradeable {
+    using LogExpMath for uint256;
+
     /// @notice the initial yearly inflation rate, 2%
     uint64 constant INITIAL_INFLATION_RATE = 2e16;
 
-    uint64 constant SECONDS_IN_YEAR = 365 days;
+    uint256 constant ONE = 10**18;
+
+    uint64 constant SECONDS_IN_YEAR = 365.25 days;
 
     /// @notice time of the first inflation
     /// inflation will start after the vesting schedule of 4 years
@@ -48,9 +54,10 @@ contract GyroToken is ERC20Upgradeable {
         require(account != address(0), "cannot mint to 0 address");
 
         uint256 timeEllapsedSinceLastInflation = block.timestamp - latestInflationTimestamp;
-        uint256 amountToMint = (totalSupply() * inflationRate * timeEllapsedSinceLastInflation) /
-            SECONDS_IN_YEAR /
-            10**18;
+        uint256 exponent = (timeEllapsedSinceLastInflation * ONE) / SECONDS_IN_YEAR;
+        uint256 currentSupply = totalSupply();
+        uint256 newSupply = (currentSupply * (ONE + inflationRate).pow(exponent)) / ONE;
+        uint256 amountToMint = newSupply - currentSupply;
 
         latestInflationTimestamp = uint64(block.timestamp);
         _mint(account, amountToMint);

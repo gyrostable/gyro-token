@@ -1,4 +1,5 @@
 from decimal import Decimal
+import pytest
 
 import brownie
 import pytest
@@ -6,7 +7,7 @@ from brownie import ZERO_ADDRESS, accounts, chain, history
 
 from tests.conftest import INITIAL_SUPPLY
 
-SECONDS_IN_YEAR = 365 * 86400
+SECONDS_IN_YEAR = 365.25 * 86400
 INFLATION_DELAY = 4 * SECONDS_IN_YEAR
 INFLATION_RATE = Decimal("0.02")
 
@@ -54,49 +55,48 @@ def test_mint(gyro_token, admin):
     with brownie.reverts("cannot mint before the first inflation is scheduled"):  # type: ignore
         gyro_token.mint(accounts[1], {"from": admin})
 
-    chain.mine(timedelta=5 * SECONDS_IN_YEAR)
+    chain.mine(timedelta=int(5.0 * SECONDS_IN_YEAR))
 
     with brownie.reverts("can only be called by governance"):  # type: ignore
         gyro_token.mint(accounts[1], {"from": accounts[1]})
 
     tx = gyro_token.mint(accounts[1], {"from": admin})
-
     created_at = history.of_address(gyro_token)[0].timestamp
-    time_elapsed_since_inflation_start = tx.timestamp - created_at - INFLATION_DELAY
-    expected_amount_minted = (
-        INITIAL_SUPPLY
-        * INFLATION_RATE
-        * time_elapsed_since_inflation_start
-        // Decimal(SECONDS_IN_YEAR)
-    )
+
+    expected_amount_minted = float(INITIAL_SUPPLY * INFLATION_RATE)
+    actual_amount_minted = float(gyro_token.balanceOf(accounts[1]))
     transfer_event = tx.events[0]
+    total_supply = float(gyro_token.totalSupply())
 
     # NOTE: could mint a few seconds after the 5 years so
     # cannot check for perfect equality with 2% inflation
-    assert (
-        INITIAL_SUPPLY * INFLATION_RATE
-        <= gyro_token.balanceOf(accounts[1])
-        == expected_amount_minted
-        <= INITIAL_SUPPLY * (INFLATION_RATE + Decimal("0.001"))
-    )
-    assert gyro_token.totalSupply() == INITIAL_SUPPLY + expected_amount_minted
+    assert actual_amount_minted == pytest.approx(expected_amount_minted)
+    assert total_supply == pytest.approx(INITIAL_SUPPLY + expected_amount_minted)
     assert gyro_token.latestInflationTimestamp() == tx.timestamp
 
     assert transfer_event["from"] == ZERO_ADDRESS
     assert transfer_event["to"] == accounts[1]
-    assert transfer_event["value"] == expected_amount_minted
+    assert float(transfer_event["value"]) == pytest.approx(expected_amount_minted)
 
-    last_inflation = tx.timestamp
-    chain.mine(timedelta=SECONDS_IN_YEAR // 5)
+    chain.mine(timedelta=int(0.9 * SECONDS_IN_YEAR))
+    gyro_token.mint(accounts[1], {"from": admin})
 
-    tx = gyro_token.mint(accounts[1], {"from": admin})
+    chain.mine(timedelta=int(0.1 * SECONDS_IN_YEAR))
+    gyro_token.mint(accounts[1], {"from": admin})
 
-    new_supply = INITIAL_SUPPLY + expected_amount_minted
-    time_elapsed_since_inflation = tx.timestamp - last_inflation
-    expected_amount_minted = (
-        new_supply
-        * INFLATION_RATE
-        * time_elapsed_since_inflation
-        // Decimal(SECONDS_IN_YEAR)
+    new_balance = float(gyro_token.balanceOf(accounts[1]))
+    new_actual_amount_minted = new_balance - actual_amount_minted
+    new_expected_amount_minted = total_supply * float(INFLATION_RATE)
+
+    assert new_actual_amount_minted == pytest.approx(new_expected_amount_minted)
+
+    expected_total_supply_after_8_years = (
+        INITIAL_SUPPLY * float(1 + INFLATION_RATE) ** 8
     )
-    assert gyro_token.totalSupply() == new_supply + expected_amount_minted
+
+    chain.mine(timedelta=int(6 * SECONDS_IN_YEAR))
+    gyro_token.mint(accounts[1], {"from": admin})
+
+    assert float(gyro_token.totalSupply()) == pytest.approx(
+        expected_total_supply_after_8_years
+    )

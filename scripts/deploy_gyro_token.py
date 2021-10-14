@@ -2,7 +2,7 @@ from brownie import GyroToken, GyroTokenProxy, ProxyAdmin  # type: ignore
 
 from scripts.utils import get_deployer, with_gas_usage
 
-INITIAL_SUPPLY = 1_000_000_000 * 10 ** 18
+INITIAL_SUPPLY = 13_700_000 * 10 ** 18
 
 
 @with_gas_usage
