@@ -1,0 +1,21 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install brownie
+        run: pip3 install wheel eth-brownie
+      - name: Compile contracts
+        run: brownie compile
+      - name: Run tests
+        run: brownie test --coverage
