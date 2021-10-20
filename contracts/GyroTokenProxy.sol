@@ -8,12 +8,14 @@ contract GyroTokenProxy is TransparentUpgradeableProxy {
     constructor(
         address logic,
         address admin,
-        uint256 initialSupply
+        uint256 initialSupply,
+        string memory name,
+        string memory symbol
     )
         TransparentUpgradeableProxy(
             logic,
             admin,
-            abi.encodeWithSignature("initialize(uint256)", initialSupply)
+            abi.encodeWithSignature("initialize(uint256,string,string)", initialSupply, name, symbol)
         )
     {}
 

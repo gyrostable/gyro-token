@@ -18,11 +18,11 @@ def isolation(fn_isolation):
 
 
 def test_symbol(gyro_token):
-    assert gyro_token.symbol() == "GYRO"
+    assert gyro_token.symbol() == "GYRTOK"
 
 
 def test_name(gyro_token):
-    assert gyro_token.name() == "Gyroscope"
+    assert gyro_token.name() == "Gyro"
 
 
 def test_initial_supply(gyro_token):

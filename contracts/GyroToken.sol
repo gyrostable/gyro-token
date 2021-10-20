@@ -33,8 +33,12 @@ contract GyroToken is ERC20Upgradeable {
         _;
     }
 
-    function initialize(uint256 initialSupply) external initializer {
-        __ERC20_init("Gyroscope", "GYRO");
+    function initialize(
+        uint256 initialSupply,
+        string calldata name,
+        string calldata symbol
+    ) external initializer {
+        __ERC20_init(name, symbol);
 
         governor = msg.sender;
         inflationRate = INITIAL_INFLATION_RATE;
