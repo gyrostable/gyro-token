@@ -1,0 +1,24 @@
+{
+  "1": {
+    "GyroToken": [
+      "0x799f90e2B828d0dE586f1cFb3e2A31785b08414E"
+    ],
+    "GyroTokenProxy": [
+      "0x70c4430f9d98B4184A4ef3E44CE10c320a8B7383"
+    ],
+    "ProxyAdmin": [
+      "0x02a73e222b18e1b85dd6998ddab5d7e02E2374Ac"
+    ]
+  },
+  "42": {
+    "GyroToken": [
+      "0xa97B46908361CcD123CD39b4A139f8ca438Df32a"
+    ],
+    "GyroTokenProxy": [
+      "0xc304FE3ade40f19821db8027C9C2b5acCc0b5BA7"
+    ],
+    "ProxyAdmin": [
+      "0x32B2682d1dd57c96C46875747C57CD346de2233B"
+    ]
+  }
+}
