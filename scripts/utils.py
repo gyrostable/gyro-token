@@ -15,6 +15,8 @@ def is_live():
 def get_deployer():
     if not is_live():
         return accounts[0]
+    if network.chain.id == 42:
+        return cast(LocalAccount, accounts.load("kovan-master"))
     if network.chain.id in {4, 421611}:  # rinkeby or arbitrum rinkeby
         return cast(LocalAccount, accounts.load("rinkeby-master"))
     raise ValueError(f"chain id {network.chain.id} not yet supported")
