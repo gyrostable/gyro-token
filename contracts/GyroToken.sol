@@ -50,7 +50,7 @@ contract GyroToken is ERC20Upgradeable {
     /// @notice mints new tokens to `account` according to the inflation schedule
     /// defined by `inflationRate` and `inflationInterval`
     /// Only governance is allowed to call this function
-    function mint(address account) external governanceOnly {
+    function mint(address account) external virtual governanceOnly {
         require(
             block.timestamp >= latestInflationTimestamp,
             "cannot mint before the first inflation is scheduled"

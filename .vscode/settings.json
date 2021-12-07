@@ -4,8 +4,8 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "solidity.remappings": [
-    "@openzeppelin/upgradeable=packages/OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2",
-    "@openzeppelin=packages/OpenZeppelin/openzeppelin-contracts@4.3.2"
+    "@openzeppelin=packages/OpenZeppelin/openzeppelin-contracts@4.3.2",
+    "@openzeppelin/upgradeable=packages/OpenZeppelin/openzeppelin-contracts-upgradeable@4.3.2"
   ],
   "[solidity]": {
     "editor.tabSize": 4,

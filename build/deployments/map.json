@@ -20,5 +20,27 @@
     "ProxyAdmin": [
       "0x32B2682d1dd57c96C46875747C57CD346de2233B"
     ]
+  },
+  "42161": {
+    "GyroArbitrumTokenProxy": [
+      "0xf59D9596CA2F8c2cCaE78A5AFe1fc446cbe6f75A"
+    ],
+    "GyroTokenArbitrum": [
+      "0x7005E86a1D25A12D7dae1EE1AFfDdf68f0Fa1075"
+    ],
+    "ProxyAdmin": [
+      "0xaf24BFD866860800121d4268aEEC90357C3e0cc4"
+    ]
+  },
+  "421611": {
+    "GyroArbitrumTokenProxy": [
+      "0xBCD841c5de13D7ED754D51EB6887607dF1C1BeF6"
+    ],
+    "GyroTokenArbitrum": [
+      "0xd8Fb3536F7f20bF451f42E017732053C427F90Df"
+    ],
+    "ProxyAdmin": [
+      "0xc6f1F175238178df5b7d8E77A95b49eBf71e33e2"
+    ]
   }
 }

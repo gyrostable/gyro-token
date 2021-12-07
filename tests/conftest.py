@@ -30,3 +30,19 @@ def gyro_token_proxy(admin, gyro_token_unititialized, GyroTokenProxy):
         "Gyro",
         "GYRTOK",
     )
+
+
+@pytest.fixture(scope="module")
+def gyro_token_l1(admin, GyroTokenL1, GyroTokenProxy):
+    gyro_token_l1 = admin.deploy(GyroTokenL1)
+    proxy = admin.deploy(
+        GyroTokenProxy,
+        gyro_token_l1,
+        admin,
+        INITIAL_SUPPLY,
+        "Gyro",
+        "GYRTOK",
+    )
+    proxy.changeAdmin(accounts[1], {"from": accounts[0]})
+    GyroTokenProxy.remove(proxy)
+    return GyroTokenL1.at(proxy.address)

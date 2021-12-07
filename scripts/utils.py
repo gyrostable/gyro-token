@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache, wraps
 from typing import cast
 
@@ -32,6 +33,8 @@ def get_deployer():
         return accounts[0]
     if network.chain.id == 1:
         return get_clef_account(MAINNET_DEPLOYER_ADDRESS)
+    elif network.chain.id == 42161:
+        return accounts.add(os.environ["ARBITRUM_PRIVATE_KEY"])
     if network.chain.id == 42:
         return cast(LocalAccount, accounts.load("kovan-master"))
     if network.chain.id in {4, 421611}:  # rinkeby or arbitrum rinkeby
