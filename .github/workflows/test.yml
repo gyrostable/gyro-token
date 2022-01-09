@@ -7,25 +7,23 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  unit_test:
+    name: Unit tests
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-      - name: Use Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-      - name: Install ganache-cli
-        run: npm install -g ganache-cli
-      - name: Install brownie
-        run: pip3 install wheel eth-brownie
-      - name: Compile contracts
-        run: brownie compile
+      - uses: ./.github/actions/setup
       - name: Run tests
-        run: brownie test --coverage
+        run: brownie test --coverage -m "not mainnetFork"
+  integration_test:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WEB3_INFURA_PROJECT_ID: ${{ secrets.WEB3_INFURA_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - name: Run tests
+        run: brownie test -m mainnetFork --network mainnet-fork

@@ -1,0 +1,19 @@
+name: "Setup environment"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Use Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+    - name: Install ganache-cli
+      shell: bash
+      run: npm install -g ganache-cli
+    - name: Install brownie
+      shell: bash
+      run: pip3 install wheel eth-brownie
