@@ -14,5 +14,10 @@ Once brownie is installed, it can be built and tested using
 
 ```
 brownie compile
-brownie test
+# Unit tests
+brownie test -m "not mainnetFork"
+# Integration tests
+brownie test -m "mainnetFork" --network mainnet-fork
 ```
+
+Note that you will need to have the `WEB3_INFURA_PROJECT_ID` environment variable to be set for the integration tests.
