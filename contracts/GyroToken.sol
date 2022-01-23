@@ -9,15 +9,15 @@ contract GyroToken is ERC20Upgradeable {
     using LogExpMath for uint256;
 
     /// @notice the initial yearly inflation rate, 2%
-    uint64 constant INITIAL_INFLATION_RATE = 2e16;
+    uint64 internal constant INITIAL_INFLATION_RATE = 2e16;
 
-    uint256 constant ONE = 10**18;
+    uint256 internal constant ONE = 10**18;
 
-    uint64 constant SECONDS_IN_YEAR = 365.25 days;
+    uint64 internal constant SECONDS_IN_YEAR = 365.25 days;
 
     /// @notice time of the first inflation
     /// inflation will start after the vesting schedule of 4 years
-    uint64 constant INITIAL_INFLATION_DELAY = 4 * SECONDS_IN_YEAR;
+    uint64 internal constant INITIAL_INFLATION_DELAY = 4 * SECONDS_IN_YEAR;
 
     /// @notice address of the governance contract
     address public governor;
@@ -45,26 +45,6 @@ contract GyroToken is ERC20Upgradeable {
         latestInflationTimestamp = uint64(block.timestamp) + INITIAL_INFLATION_DELAY;
 
         _mint(msg.sender, initialSupply);
-    }
-
-    /// @notice mints new tokens to `account` according to the inflation schedule
-    /// defined by `inflationRate` and `inflationInterval`
-    /// Only governance is allowed to call this function
-    function mint(address account) external virtual governanceOnly {
-        require(
-            block.timestamp >= latestInflationTimestamp,
-            "cannot mint before the first inflation is scheduled"
-        );
-        require(account != address(0), "cannot mint to 0 address");
-
-        uint256 timeEllapsedSinceLastInflation = block.timestamp - latestInflationTimestamp;
-        uint256 exponent = (timeEllapsedSinceLastInflation * ONE) / SECONDS_IN_YEAR;
-        uint256 currentSupply = totalSupply();
-        uint256 newSupply = (currentSupply * (ONE + inflationRate).pow(exponent)) / ONE;
-        uint256 amountToMint = newSupply - currentSupply;
-
-        latestInflationTimestamp = uint64(block.timestamp);
-        _mint(account, amountToMint);
     }
 
     /// @notice changes the governor to `newGovernor`

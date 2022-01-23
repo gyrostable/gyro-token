@@ -11,8 +11,8 @@ def admin():
 
 
 @pytest.fixture(scope="module")
-def gyro_token_unititialized(admin, GyroToken):
-    return admin.deploy(GyroToken)
+def gyro_token_unititialized(admin, GyroTokenL1):
+    return admin.deploy(GyroTokenL1)
 
 
 @pytest.fixture(scope="module")

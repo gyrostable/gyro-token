@@ -10,6 +10,8 @@ import "../interfaces/IL1GatewayRouter.sol";
 import "../interfaces/IL1CustomGateway.sol";
 
 contract GyroTokenL1 is GyroToken, ICustomToken {
+    using LogExpMath for uint256;
+
     /// @notice this is used by the Arbitrum bridge registration callback
     bool public shouldRegisterArbitrumGateway;
 
@@ -18,6 +20,26 @@ contract GyroTokenL1 is GyroToken, ICustomToken {
 
     /// @notice address of the arbitrum router
     address arbitrumRouter;
+
+    /// @notice mints new tokens to `account` according to the inflation schedule
+    /// defined by `inflationRate` and `inflationInterval`
+    /// Only governance is allowed to call this function
+    function mint(address account) external virtual governanceOnly {
+        require(
+            block.timestamp >= latestInflationTimestamp,
+            "cannot mint before the first inflation is scheduled"
+        );
+        require(account != address(0), "cannot mint to 0 address");
+
+        uint256 timeEllapsedSinceLastInflation = block.timestamp - latestInflationTimestamp;
+        uint256 exponent = (timeEllapsedSinceLastInflation * ONE) / SECONDS_IN_YEAR;
+        uint256 currentSupply = totalSupply();
+        uint256 newSupply = (currentSupply * (ONE + inflationRate).pow(exponent)) / ONE;
+        uint256 amountToMint = newSupply - currentSupply;
+
+        latestInflationTimestamp = uint64(block.timestamp);
+        _mint(account, amountToMint);
+    }
 
     /// @notice returns uint8(`0xa4b1`) == `0xb1` if the contract is enabled on Arbitrum
     /// as per the `ArbitrumEnabledToken` specs
