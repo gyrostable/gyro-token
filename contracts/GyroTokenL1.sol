@@ -67,7 +67,7 @@ contract GyroTokenL1 is GyroToken, ICustomToken {
         uint256 valueForGateway,
         uint256 valueForRouter,
         address creditBackAddress
-    ) public payable override {
+    ) external payable override governanceOnly {
         require(
             arbitrumBridge != address(0) && arbitrumRouter != address(0),
             "arbitrum addresses not initialized"
