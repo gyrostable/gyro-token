@@ -76,6 +76,10 @@ contract GyroTokenL1 is GyroToken, ICustomToken {
             arbitrumBridge != address(0) && arbitrumRouter != address(0),
             "arbitrum addresses not initialized"
         );
+        require(
+            msg.value == (valueForGateway + valueForRouter),
+            "msg.value must equal valueForGateway + valueForRouter"
+        );
 
         // we temporarily set `shouldRegisterGateway` to true for the callback in registerTokenToL2 to succeed
         bool prev = shouldRegisterArbitrumGateway;
