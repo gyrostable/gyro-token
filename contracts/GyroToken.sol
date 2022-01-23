@@ -6,7 +6,7 @@ import "@openzeppelin/upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../libraries/LogExpMath.sol";
 
 contract GyroToken is ERC20Upgradeable {
-    using LogExpMath for uint256;
+    event GovernorChanged(address indexed oldGovernor, address indexed newGovernor);
 
     /// @notice the initial yearly inflation rate, 2%
     uint64 internal constant INITIAL_INFLATION_RATE = 2e16;
@@ -51,6 +51,8 @@ contract GyroToken is ERC20Upgradeable {
     /// This can only be called by the current governor
     function changeGovernor(address newGovernor) external governanceOnly {
         require(newGovernor != address(0), "governor cannot be the 0 address");
+        require(newGovernor != msg.sender, "new governor cannot be the same as the current one");
         governor = newGovernor;
+        emit GovernorChanged(msg.sender, newGovernor);
     }
 }
