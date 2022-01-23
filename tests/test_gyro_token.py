@@ -55,7 +55,8 @@ def test_mint(gyro_token, admin):
     with brownie.reverts("cannot mint before the first inflation is scheduled"):  # type: ignore
         gyro_token.mint(accounts[1], {"from": admin})
 
-    chain.mine(timedelta=int(5.0 * SECONDS_IN_YEAR))
+    chain.sleep(int(5.0 * SECONDS_IN_YEAR))
+    chain.mine()
 
     with brownie.reverts("can only be called by governance"):  # type: ignore
         gyro_token.mint(accounts[1], {"from": accounts[1]})
@@ -78,10 +79,12 @@ def test_mint(gyro_token, admin):
     assert transfer_event["to"] == accounts[1]
     assert float(transfer_event["value"]) == pytest.approx(expected_amount_minted)
 
-    chain.mine(timedelta=int(0.9 * SECONDS_IN_YEAR))
+    chain.sleep(int(0.9 * SECONDS_IN_YEAR))
+    chain.mine()
     gyro_token.mint(accounts[1], {"from": admin})
 
-    chain.mine(timedelta=int(0.1 * SECONDS_IN_YEAR))
+    chain.sleep(int(0.1 * SECONDS_IN_YEAR))
+    chain.mine()
     gyro_token.mint(accounts[1], {"from": admin})
 
     new_balance = float(gyro_token.balanceOf(accounts[1]))
@@ -94,7 +97,8 @@ def test_mint(gyro_token, admin):
         INITIAL_SUPPLY * float(1 + INFLATION_RATE) ** 8
     )
 
-    chain.mine(timedelta=int(6 * SECONDS_IN_YEAR))
+    chain.sleep(int(6 * SECONDS_IN_YEAR))
+    chain.mine()
     gyro_token.mint(accounts[1], {"from": admin})
 
     assert float(gyro_token.totalSupply()) == pytest.approx(

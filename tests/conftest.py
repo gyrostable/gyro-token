@@ -1,5 +1,6 @@
 import pytest
 from brownie import accounts
+from brownie.network import gas_price
 
 INITIAL_SUPPLY = 1_000_000 * 10 ** 18
 
@@ -46,3 +47,8 @@ def gyro_token_l1(admin, GyroTokenL1, GyroTokenProxy):
     proxy.changeAdmin(accounts[1], {"from": accounts[0]})
     GyroTokenProxy.remove(proxy)
     return GyroTokenL1.at(proxy.address)
+
+
+@pytest.fixture(autouse=True, scope="session")
+def set_gas_price():
+    gas_price("1 gwei")
