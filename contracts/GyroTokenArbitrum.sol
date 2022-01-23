@@ -16,6 +16,10 @@ contract GyroTokenArbitrum is ERC20Upgradeable, IArbToken {
         string calldata symbol,
         address _arbitrumGatewayAddress
     ) external initializer {
+        require(
+            _arbitrumGatewayAddress != address(0),
+            "arbitrumGatewayAddress cannot be the zero address"
+        );
         __ERC20_init(name, symbol);
         arbitrumGatewayAddress = _arbitrumGatewayAddress;
     }

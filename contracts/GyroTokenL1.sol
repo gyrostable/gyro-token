@@ -53,6 +53,10 @@ contract GyroTokenL1 is GyroToken, ICustomToken {
         external
         governanceOnly
     {
+        require(
+            _arbitrumBridge != address(0) && _arbitrumRouter != address(0),
+            "cannot set bridge or router to 0 address"
+        );
         arbitrumBridge = _arbitrumBridge;
         arbitrumRouter = _arbitrumRouter;
     }
