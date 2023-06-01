@@ -10,6 +10,14 @@
       "0x02a73e222b18e1b85dd6998ddab5d7e02E2374Ac"
     ]
   },
+  "137": {
+    "GyroToken": [
+      "0x40485894D6dE82596Fadc7c148D63cBED9D4855f"
+    ],
+    "GyroTokenProxy": [
+      "0x815c288dD62a761025f69B7dac2C93143Da4c0a8"
+    ]
+  },
   "42": {
     "GyroToken": [
       "0xa97B46908361CcD123CD39b4A139f8ca438Df32a"

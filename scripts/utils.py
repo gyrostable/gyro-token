@@ -37,6 +37,8 @@ def get_deployer():
         return accounts.add(os.environ["ARBITRUM_PRIVATE_KEY"])
     if network.chain.id == 42:
         return cast(LocalAccount, accounts.load("kovan-master"))
+    if network.chain.id == 137:
+        return cast(LocalAccount, accounts.load("gyro-deployer"))
     if network.chain.id in {4, 421611}:  # rinkeby or arbitrum rinkeby
         return cast(LocalAccount, accounts.load("rinkeby-master"))
     raise ValueError(f"chain id {network.chain.id} not yet supported")
