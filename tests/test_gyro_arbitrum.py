@@ -7,6 +7,7 @@ CUSTOM_GATEWAY = "0xcEe284F754E854890e311e3280b767F80797180d"
 DUMMY_L2_ADDRESS = "0xd4Ac800c1A291d3DB5Fa76536A17f2A7DB6bE96b"
 
 
+@pytest.mark.skip(reason="not currently using arbitrum bridging")
 @pytest.mark.mainnetFork
 def test_register_token_on_l2(gyro_token_l1, accounts):
     gyro_token_l1.setArbitrumAddresses(
@@ -14,11 +15,11 @@ def test_register_token_on_l2(gyro_token_l1, accounts):
     )
     gyro_token_l1.registerTokenOnL2(
         DUMMY_L2_ADDRESS,  # address l2CustomTokenAddress,
-        10 ** 14,  # uint256 maxSubmissionCostForCustomBridge,
-        10 ** 14,  # uint256 maxSubmissionCostForRouter,
+        10**14,  # uint256 maxSubmissionCostForCustomBridge,
+        10**14,  # uint256 maxSubmissionCostForRouter,
         500_000,  # uint256 maxGasForCustomBridge,
         500_000,  # uint256 maxGasForRouter,
-        80 * 10 ** 9,  # uint256 gasPriceBid,
+        80 * 10**9,  # uint256 gasPriceBid,
         0,  # uint256 valueForGateway,
         0,  # uint256 valueForRouter,
         accounts[0],  # address creditBackAddress
