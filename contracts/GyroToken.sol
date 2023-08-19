@@ -6,6 +6,8 @@ import "@openzeppelin/upgradeable/contracts/token/ERC20/ERC20Upgradeable.sol";
 import "../libraries/LogExpMath.sol";
 
 contract GyroToken is ERC20Upgradeable {
+    using LogExpMath for uint256;
+
     event GovernorChanged(address indexed oldGovernor, address indexed newGovernor);
 
     /// @notice the initial yearly inflation rate, 2%
@@ -45,6 +47,26 @@ contract GyroToken is ERC20Upgradeable {
         latestInflationTimestamp = uint64(block.timestamp) + INITIAL_INFLATION_DELAY;
 
         _mint(msg.sender, initialSupply);
+    }
+
+    /// @notice mints new tokens to `account` according to the inflation schedule
+    /// defined by `inflationRate` and `inflationInterval`
+    /// Only governance is allowed to call this function
+    function mint(address account) external virtual governanceOnly {
+        require(
+            block.timestamp >= latestInflationTimestamp,
+            "cannot mint before the first inflation is scheduled"
+        );
+        require(account != address(0), "cannot mint to 0 address");
+
+        uint256 timeEllapsedSinceLastInflation = block.timestamp - latestInflationTimestamp;
+        uint256 exponent = (timeEllapsedSinceLastInflation * ONE) / SECONDS_IN_YEAR;
+        uint256 currentSupply = totalSupply();
+        uint256 newSupply = (currentSupply * (ONE + inflationRate).pow(exponent)) / ONE;
+        uint256 amountToMint = newSupply - currentSupply;
+
+        latestInflationTimestamp = uint64(block.timestamp);
+        _mint(account, amountToMint);
     }
 
     /// @notice changes the governor to `newGovernor`

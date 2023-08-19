@@ -6,6 +6,9 @@
     "GyroTokenProxy": [
       "0x70c4430f9d98B4184A4ef3E44CE10c320a8B7383"
     ],
+    "GyroTokenV2": [
+      "0xA8725F6Ff4AF9EEFBBe468b87a6F242353030525"
+    ],
     "ProxyAdmin": [
       "0x02a73e222b18e1b85dd6998ddab5d7e02E2374Ac"
     ]
