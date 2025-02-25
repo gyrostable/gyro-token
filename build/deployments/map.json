@@ -9,6 +9,9 @@
     "GyroTokenV2": [
       "0xA8725F6Ff4AF9EEFBBe468b87a6F242353030525"
     ],
+    "GyroTokenV3": [
+      "0x2ed1782c98EAD551A54C712bCa01251db5d6d319"
+    ],
     "ProxyAdmin": [
       "0x02a73e222b18e1b85dd6998ddab5d7e02E2374Ac"
     ]
