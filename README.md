@@ -1,6 +1,6 @@
-# Gyroscope governance token
+# Gyroscope governance token GYFI
 
-This repository hosts the code for the Gyroscope governance token.
+This repository hosts the code for the Gyroscope governance token GYFI.
 
 The token will be upgradeable to start with and will be frozen when the final
 decisions on its designed are made.
